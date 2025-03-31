@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  tags:
+    - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Сборка проекта
+        run: |
+          echo "Сборка проекта..."
+          # Команды для сборки вашего проекта
+          
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Запуск тестов
+        run: |
+          echo "Запуск тестов..."
+          # Команды для запуска тестов
+          
+  deploy:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Деплой релиза
+        run: |
+          echo "Деплой версии ${GITHUB_REF#refs/tags/}..."
+          # Команды для деплоя
